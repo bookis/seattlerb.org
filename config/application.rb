@@ -41,6 +41,7 @@ module SeattlerbOrg
 
     # Enable the asset pipeline
     config.assets.enabled = true
+    config.assets.initialize_on_precompile = false
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
@@ -48,5 +49,11 @@ module SeattlerbOrg
     # carryforwad from v 2.3.3
     config.time_zone = 'UTC'
 
+  end
+end
+
+class ActiveRecord::Base
+  class << self
+    alias habtm has_and_belongs_to_many
   end
 end

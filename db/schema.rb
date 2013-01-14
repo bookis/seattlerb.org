@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120613212608) do
+ActiveRecord::Schema.define(:version => 20130110050659) do
 
   create_table "affiliations", :force => true do |t|
     t.integer   "dude_id"
@@ -21,17 +21,17 @@ ActiveRecord::Schema.define(:version => 20120613212608) do
   end
 
   create_table "dudes", :force => true do |t|
-    t.string   "name"
-    t.string   "email"
-    t.text     "bio",          :limit => 255
-    t.string   "website"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "ruby_gems_id"
-    t.boolean  "featured",                    :default => false
-    t.string   "twitter"
-    t.string   "github"
-    t.string   "image_url"
+    t.string    "name"
+    t.string    "email"
+    t.text      "bio"
+    t.string    "website"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.string    "ruby_gems_id"
+    t.boolean   "featured",     :default => false
+    t.string    "twitter"
+    t.string    "github"
+    t.string    "image_url"
   end
 
   create_table "projects", :force => true do |t|
@@ -41,5 +41,49 @@ ActiveRecord::Schema.define(:version => 20120613212608) do
     t.timestamp "created_at"
     t.timestamp "updated_at"
   end
+
+  create_table "rails_admin_histories", :force => true do |t|
+    t.text      "message"
+    t.string    "username"
+    t.integer   "item"
+    t.string    "table"
+    t.integer   "month"
+    t.integer   "year"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+  end
+
+  add_index "rails_admin_histories", ["item", "table", "month", "year"], :name => "index_rails_admin_histories"
+
+  create_table "talks", :force => true do |t|
+    t.string  "title"
+    t.text    "description"
+    t.string  "presenter"
+    t.string  "kind"
+    t.string  "email",          :default => "",    :null => false
+    t.boolean "completed",      :default => false
+    t.date    "scheduled_date"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string    "email",                  :default => "", :null => false
+    t.string    "encrypted_password",     :default => "", :null => false
+    t.string    "reset_password_token"
+    t.timestamp "reset_password_sent_at"
+    t.timestamp "remember_created_at"
+    t.integer   "sign_in_count",          :default => 0
+    t.timestamp "current_sign_in_at"
+    t.timestamp "last_sign_in_at"
+    t.string    "current_sign_in_ip"
+    t.string    "last_sign_in_ip"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.string    "confirmation_token"
+    t.timestamp "confirmed_at"
+    t.timestamp "confirmation_sent_at"
+  end
+
+  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
+  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

@@ -1,15 +1,21 @@
 class Dude < ActiveRecord::Base
+  habtm :projects, :join_table => :affiliations
+
   validates_presence_of :name
-  validates_presence_of :ruby_gems_id
-  has_many :affiliations, :dependent => :destroy
-  has_many :projects, :through => :affiliations
+  # our migrations are so stupid. If we nuke the data, this conditional can go
+  validates_presence_of :ruby_gems_id, :if => proc { |u| u.respond_to? :ruby_gems_id }
+
   scope :featured, where(featured: true)
   scope :regular, where(featured: false)
 
-  before_save :set_avatar, if: Proc.new { |user| user.twitter_changed? }
+  before_save :set_avatar, if: Proc.new { |user|
+    user.respond_to?(:twitter_changed?) and user.twitter_changed?
+  }
 
   def bio
-    super.blank? ? "..." : super
+    bio = self['bio']
+
+    bio.present? ? bio : "..."
   end
 
   def update_avatar!
@@ -28,8 +34,6 @@ class Dude < ActiveRecord::Base
       self.image_url = image_url
     end
   end
-
-  private
 
   def missing_image?
     image_url.blank? || image_url == "missing_image.png"
